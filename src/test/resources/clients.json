@@ -1,0 +1,23 @@
+[
+  {
+    "clientId": "client1",
+    "clientSecret": "secret-one",
+    "authorities": [
+      "groupA",
+      "groupB"
+    ],
+    "scope": [
+      "access:read"
+    ]
+  },
+  {
+    "clientId": "client2",
+    "clientSecret": "secret-two",
+    "authorities": [
+      "groupC"
+    ],
+    "scope": [
+      "access:write"
+    ]
+  }
+]
