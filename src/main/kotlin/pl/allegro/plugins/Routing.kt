@@ -30,13 +30,11 @@ fun Application.configureRouting() {
         post("/{provider}/token") {
             val params = call.receiveParameters()
             val oAuthService = providerResolver.getServiceForProvider(call.parameters.getProvider())
-            val token = params["client_id"]?.let { oAuthService.generateToken(it) } ?: oAuthService.generateToken()
-            call.respondText(token)
+            call.respondText(oAuthService.generateToken(params["client_id"], params["client_secret"]))
         }
         get("/{provider}/token") {
             call.respondText(providerResolver.getServiceForProvider(call.parameters.getProvider()).generateToken())
         }
-
         put("/{provider}/client") {
             val clientString = call.receive<String>()
             val client = providerResolver.getServiceForProvider(call.parameters.getProvider())

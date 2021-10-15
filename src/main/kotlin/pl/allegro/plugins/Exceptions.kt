@@ -11,5 +11,10 @@ fun Application.configureExceptions() {
         exception<SerializationException> {
             call.respond(HttpStatusCode.BadRequest, it.message.toString())
         }
+        exception<UnauthorizedException> {
+            call.respond(HttpStatusCode.Unauthorized, it.message.toString())
+        }
     }
 }
+
+class UnauthorizedException: Exception("Bad credentials")

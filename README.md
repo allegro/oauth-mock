@@ -17,4 +17,4 @@ Default provider is `auth`. If request is made to non-existing provider it gets 
 
 ## Supported grant types
 
-- Client credentials (client secret is not validated)
+- Client credentials
