@@ -14,9 +14,9 @@ import io.ktor.features.*
 import pl.allegro.client.Client
 import pl.allegro.client.ClientsService
 import pl.allegro.client.LocalClientsService
+import pl.allegro.plugins.UnauthorizedException
 import java.time.Instant
-import java.util.Date
-import java.util.UUID
+import java.util.*
 
 
 class OAuthService(
@@ -29,15 +29,15 @@ class OAuthService(
 
     fun getJWKs() = JWKSet(getJWK())
 
-    fun generateToken() = generateToken(createBasicClaims())
+    fun generateToken(clientId: String? = null, clientSecret: String? = null): String {
+        if (clientId == null) return generateToken(createBasicClaims())
 
-    fun generateToken(clientId: String): String {
-        val claims: JWTClaimsSet = clientsService.getClientWithId(clientId)?.let { createClaimsForClient(it) }
-            ?: throw NotFoundException("Client with id $clientId not found")
+        val client = clientsService.getClientWithId(clientId) ?: throw NotFoundException("Client with id $clientId not found")
 
-        return generateToken(payload = claims)
+        if (client.clientSecret != clientSecret) throw UnauthorizedException()
+
+        return generateToken(payload = createClaimsForClient(client))
     }
-
     fun addClient(client: Client) = clientsService.addClient(client)
 
     private fun generateToken(payload: JWTClaimsSet): String {
